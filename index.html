@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ODYSSEY — Beyond the Pale Blue Dot</title>
+  <meta name="description" content="A scroll-driven 3D journey from Earth to the event horizon of Sagittarius A*." />
+  <meta name="theme-color" content="#04050a" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script type="importmap">
+    { "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+    } }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+</head>
+<body>
+  <div class="loader" aria-hidden="true">
+    <div class="loader__inner">
+      <div class="loader__count">000</div>
+      <div class="loader__label">Calibrating optics</div>
+      <div class="loader__bar"><span></span></div>
+    </div>
+  </div>
+
+  <canvas id="webgl" aria-hidden="true"></canvas>
+  <div class="cursor" aria-hidden="true"></div>
+
+  <header class="hud hud--top">
+    <a class="brand" href="#top" aria-label="Odyssey home">ODYSSEY<span class="brand__dot"></span></a>
+    <span class="mono" data-clock>T+ 00:00:00</span>
+    <span class="mono status"><i></i> Signal nominal</span>
+  </header>
+
+  <nav class="hud rail" aria-label="Chapters"></nav>
+
+  <div class="hud telemetry mono" aria-live="off">
+    <div><span>Dist</span><b data-dist>0 km</b></div>
+    <div><span>Vel</span><b data-vel>0 km/s</b></div>
+    <div><span>Ch</span><b data-ch>00 / 07</b></div>
+  </div>
+
+  <div class="scroll-hint mono" aria-hidden="true"><span></span>Scroll to launch</div>
+
+  <main id="top">
+    <section class="chapter chapter--hero" data-name="Earth">
+      <div class="panel">
+        <p class="kicker mono">00 — Origin · Earth</p>
+        <h1 class="headline" data-split>Beyond the<br><em>pale blue</em> dot</h1>
+        <p class="body">Every human who ever lived lived here, on a mote of dust suspended in a sunbeam. Scroll to leave it. This is a journey of 26,000 light-years, told in a few thousand pixels.</p>
+        <div class="stats">
+          <div class="stat"><b data-count="12742">0</b><span>km diameter</span></div>
+          <div class="stat"><b>23h 56m</b><span>sidereal day</span></div>
+          <div class="stat"><b data-count="71">0</b><span>% ocean</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter chapter--right" data-name="Moon">
+      <div class="panel">
+        <p class="kicker mono">01 — Luna</p>
+        <h2 class="headline" data-split>The first<br><em>stepping</em> stone</h2>
+        <p class="body">1.3 light-seconds from home. Twelve people have walked its grey dust, and their footprints will outlast every city on Earth. There is no wind here to erase them.</p>
+        <div class="stats">
+          <div class="stat"><b data-count="384400">0</b><span>km from Earth</span></div>
+          <div class="stat"><b data-count="27.3" data-dec="1">0</b><span>day orbit</span></div>
+          <div class="stat"><b data-count="12">0</b><span>moonwalkers</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter" data-name="Mars">
+      <div class="panel">
+        <p class="kicker mono">02 — The Red Planet</p>
+        <h2 class="headline" data-split>A desert that<br><em>remembers</em> water</h2>
+        <p class="body">Dry riverbeds, ancient deltas and polar ice. Mars is rusted iron over a history of rain. Its canyon, Valles Marineris, would stretch from New York to Los Angeles.</p>
+        <div class="stats">
+          <div class="stat"><b data-count="6779">0</b><span>km diameter</span></div>
+          <div class="stat"><b>24h 37m</b><span>one sol</span></div>
+          <div class="stat"><b data-count="21.9" data-dec="1">0</b><span>km, Olympus Mons</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter chapter--right" data-name="Belt">
+      <div class="panel">
+        <p class="kicker mono">03 — Main Asteroid Belt</p>
+        <h2 class="headline" data-split>Rubble of a world<br><em>that never</em> formed</h2>
+        <p class="body">Jupiter's gravity stirred this region so violently that no planet could ever coalesce. What's left is millions of fragments, from pebbles to the dwarf planet Ceres.</p>
+        <div class="stats">
+          <div class="stat"><b data-count="1.3" data-dec="1">0</b><span>million+ rocks &gt;1 km</span></div>
+          <div class="stat"><b data-count="940">0</b><span>km, Ceres</span></div>
+          <div class="stat"><b>2.2–3.2</b><span>AU from the Sun</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter" data-name="Jupiter">
+      <div class="panel">
+        <p class="kicker mono">04 — The Giant</p>
+        <h2 class="headline" data-split>A storm older<br><em>than</em> nations</h2>
+        <p class="body">Jupiter is more than twice the mass of every other planet combined. The Great Red Spot, a hurricane wider than Earth, has been raging since at least the 1800s.</p>
+        <div class="stats">
+          <div class="stat"><b data-count="139820">0</b><span>km diameter</span></div>
+          <div class="stat"><b>9h 56m</b><span>shortest day</span></div>
+          <div class="stat"><b data-count="95">0</b><span>+ known moons</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter chapter--right" data-name="Saturn">
+      <div class="panel">
+        <p class="kicker mono">05 — The Ringed One</p>
+        <h2 class="headline" data-split>Jewelry of<br><em>ice and</em> time</h2>
+        <p class="body">The rings are 280,000 km wide but mostly just tens of metres thick, made of countless shards of water ice. Saturn itself is so light it would float in a big enough bath.</p>
+        <div class="stats">
+          <div class="stat"><b data-count="116460">0</b><span>km diameter</span></div>
+          <div class="stat"><b data-count="0.69" data-dec="2">0</b><span>g/cm³ density</span></div>
+          <div class="stat"><b data-count="274">0</b><span>known moons</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter chapter--bh" data-name="Sgr A*">
+      <div class="panel">
+        <p class="kicker mono">06 — Sagittarius A*</p>
+        <h2 class="headline" data-split>Where light<br><em>forgets</em> the way home</h2>
+        <p class="body">At the heart of the Milky Way sits a black hole four million times the mass of the Sun. Its gravity bends light into a ring, so you can see the far side of its disk wrapped over the top.</p>
+        <div class="stats">
+          <div class="stat"><b data-count="4.3" data-dec="1">0</b><span>million solar masses</span></div>
+          <div class="stat"><b data-count="26000">0</b><span>light-years away</span></div>
+          <div class="stat"><b data-count="2022">0</b><span>first image (EHT)</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter chapter--outro" data-name="Beyond">
+      <div class="panel">
+        <p class="kicker mono">07 — Beyond</p>
+        <h2 class="headline headline--quote" data-split>The universe is under no obligation to <em>make sense</em> to you</h2>
+        <p class="quote-by mono">— Neil deGrasse Tyson</p>
+        <button class="cta" type="button" data-home><span>Return to Earth</span><i aria-hidden="true">↺</i></button>
+      </div>
+    </section>
+  </main>
+
+  <noscript><p style="padding:2rem;color:#fff">ODYSSEY needs JavaScript and WebGL2 to fly.</p></noscript>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
